@@ -90,7 +90,7 @@ export default function OcorrenciaDetailPage() {
   const ocorrencia = isDesvio ? desvio : nc
   const statusAtual = isDesvio ? desvio?.status : nc?.status
   const isAberto = isDesvio ? statusAtual === 'ABERTO' : statusAtual === 'ABERTA'
-  const usuarioCriacaoId = (ocorrencia as any)?.usuarioCriacaoId
+  const usuarioCriacaoId = ocorrencia?.usuarioCriacaoId
   const isCriador = user?.id === usuarioCriacaoId && user?.perfil !== 'EXTERNO'
   const podeAvancar = isAberto && (isCriador || isAdmin)
   const podeEditarExcluir = isAberto ? (isCriador || isAdmin) : isAdmin
@@ -107,7 +107,7 @@ export default function OcorrenciaDetailPage() {
   })
 
   const avancarMutation = useMutation<void, Error, void>({
-    mutationFn: () => isDesvio ? abrirTratativaDesvio(id!) as any : ativarNaoConformidade(id!) as any,
+    mutationFn: async () => { if (isDesvio) await abrirTratativaDesvio(id!); else await ativarNaoConformidade(id!) },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [isDesvio ? 'desvio' : 'nc', id] })
       queryClient.invalidateQueries({ queryKey: ['ocorrencias'] })
@@ -260,16 +260,16 @@ export default function OcorrenciaDetailPage() {
         {/* Page header: tags + title + subtitle */}
         <div className="overflow-hidden min-w-0">
           <div className="flex flex-wrap items-center gap-2 mb-2">
-            <CodigoBadge codigo={(ocorrencia as any).codigo} />
+            <CodigoBadge codigo={ocorrencia.codigo} />
             <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${isDesvio ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>
               {isDesvio ? 'Desvio' : 'Não Conformidade'}
             </span>
-            {!isDesvio && (ocorrencia as any).regraDeOuro && (
+            {!isDesvio && ocorrencia.regraDeOuro && (
               <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-red-100 text-red-600 flex items-center gap-1">
                 <Shield size={12} /> Regra de Ouro
               </span>
             )}
-            {!isDesvio && (ocorrencia as any).reincidencia && (
+            {!isDesvio && nc?.reincidencia && (
               <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-orange-100 text-orange-700 flex items-center gap-1">
                 <RefreshCw size={12} /> Reincidência
               </span>
@@ -286,11 +286,11 @@ export default function OcorrenciaDetailPage() {
               <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-orange-100 text-orange-700 border border-orange-200">Vencida</span>
             )}
           </div>
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-1 truncate w-full" title={(ocorrencia as any).titulo}>{(ocorrencia as any).titulo}</h1>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-1 truncate w-full" title={ocorrencia.titulo}>{ocorrencia.titulo}</h1>
           <p className="text-sm text-slate-400 dark:text-slate-500">
-            {(ocorrencia as any).estabelecimentoNome}
-            {(ocorrencia as any).localizacaoNome ? ` · ${(ocorrencia as any).localizacaoNome}` : ''}
-            {' · registrada em '}{formatDate((ocorrencia as any).dataRegistro)}
+            {ocorrencia.estabelecimentoNome}
+            {ocorrencia.localizacaoNome ? ` · ${ocorrencia.localizacaoNome}` : ''}
+            {' · registrada em '}{formatDate(ocorrencia.dataRegistro)}
           </p>
         </div>
 
@@ -305,13 +305,13 @@ export default function OcorrenciaDetailPage() {
               <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-4">Identificação</div>
               <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                 <Field label="Estabelecimento">
-                  <div className={`${valueClass} flex items-center gap-1.5`}><Building2 size={13} className="text-slate-400" />{(ocorrencia as any).estabelecimentoNome}</div>
+                  <div className={`${valueClass} flex items-center gap-1.5`}><Building2 size={13} className="text-slate-400" />{ocorrencia.estabelecimentoNome}</div>
                 </Field>
                 <Field label="Localização">
-                  <div className={`${valueClass} flex items-center gap-1.5`}><MapPin size={13} className="text-slate-400" />{(ocorrencia as any).localizacaoNome || '—'}</div>
+                  <div className={`${valueClass} flex items-center gap-1.5`}><MapPin size={13} className="text-slate-400" />{ocorrencia.localizacaoNome || '—'}</div>
                 </Field>
                 <Field label="Data de Registro">
-                  <div className={`${valueClass} flex items-center gap-1.5`}><Calendar size={13} className="text-slate-400" />{formatDate((ocorrencia as any).dataRegistro)}</div>
+                  <div className={`${valueClass} flex items-center gap-1.5`}><Calendar size={13} className="text-slate-400" />{formatDate(ocorrencia.dataRegistro)}</div>
                 </Field>
                 {!isDesvio
                   ? (
@@ -324,9 +324,9 @@ export default function OcorrenciaDetailPage() {
                 <Field label="Registrador">
                   <div className={`${valueClass} flex items-center gap-1.5`}>
                     <User size={13} className="text-slate-400" />
-                    {(ocorrencia as any).usuarioCriacaoNome
-                      ? `${(ocorrencia as any).usuarioCriacaoNome}${(ocorrencia as any).usuarioCriacaoEmail ? ` (${(ocorrencia as any).usuarioCriacaoEmail})` : ''}`
-                      : (ocorrencia as any).tecnicoNome || '—'}
+                    {ocorrencia.usuarioCriacaoNome
+                      ? `${ocorrencia.usuarioCriacaoNome}${ocorrencia.usuarioCriacaoEmail ? ` (${ocorrencia.usuarioCriacaoEmail})` : ''}`
+                      : ocorrencia.tecnicoNome || '—'}
                   </div>
                 </Field>
                 <Field label="ID">
@@ -334,14 +334,14 @@ export default function OcorrenciaDetailPage() {
                 </Field>
                 {!isDesvio && (
                   <Field label="Regra de Ouro">
-                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${(ocorrencia as any).regraDeOuro ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-slate-500'}`}>
-                      {(ocorrencia as any).regraDeOuro ? 'Sim' : 'Não'}
+                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${ocorrencia.regraDeOuro ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-slate-500'}`}>
+                      {ocorrencia.regraDeOuro ? 'Sim' : 'Não'}
                     </span>
                   </Field>
                 )}
                 <div className="col-span-2">
                   <Field label="Descrição">
-                    <div className={`${valueClass} whitespace-pre-wrap break-words overflow-hidden`}>{(ocorrencia as any).descricao || '—'}</div>
+                    <div className={`${valueClass} whitespace-pre-wrap break-words overflow-hidden`}>{ocorrencia.descricao || '—'}</div>
                   </Field>
                 </div>
                 {!isDesvio && nc!.normas && nc!.normas.length > 0 && (
@@ -648,8 +648,8 @@ export default function OcorrenciaDetailPage() {
                 {isDesvio ? 'Enviar para Tratativa' : 'Enviar para Plano de Ação'}
               </h3>
               <div className="bg-slate-50 rounded-lg p-4 text-sm space-y-1">
-                <p className="flex gap-1 min-w-0"><span className="text-slate-500 shrink-0">Título:</span> <strong className="truncate" title={(ocorrencia as any)?.titulo}>{(ocorrencia as any)?.titulo}</strong></p>
-                <p><span className="text-slate-500">Estabelecimento:</span> {(ocorrencia as any)?.estabelecimentoNome}</p>
+                <p className="flex gap-1 min-w-0"><span className="text-slate-500 shrink-0">Título:</span> <strong className="truncate" title={ocorrencia?.titulo}>{ocorrencia?.titulo}</strong></p>
+                <p><span className="text-slate-500">Estabelecimento:</span> {ocorrencia?.estabelecimentoNome}</p>
               </div>
               <p className="text-sm text-orange-700 bg-orange-50 rounded-lg p-3">
                 Após confirmar, <strong>não será possível editar</strong> os dados desta {isDesvio ? 'ocorrência' : 'NC'}.
@@ -729,7 +729,7 @@ export default function OcorrenciaDetailPage() {
                 </div>
               </div>
               <p className="text-sm text-slate-600 mb-4">
-                Tem certeza que deseja excluir <strong>"{(ocorrencia as any).titulo}"</strong>?
+                Tem certeza que deseja excluir <strong>"{ocorrencia.titulo}"</strong>?
               </p>
               {!isDesvio && nc && (nc.atividades?.length > 0 || nc.execucoes?.length > 0 || nc.devolutivas?.length > 0 || nc.historico?.length > 0) && (
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
