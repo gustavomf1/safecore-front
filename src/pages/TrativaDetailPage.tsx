@@ -167,7 +167,7 @@ export default function TrativaDetailPage() {
       aprovadas.forEach(a => { if (!next[a.id]) next[a.id] = { status: 'APROVADA', motivo: '' } })
       return next
     })
-  }, [nc?.id])
+  }, [nc?.id, nc?.atividades])
 
   useEffect(() => {
     if (nc && !initialized.current) {

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { Upload, Download, Trash2, Eye, X, File as FileIcon, Loader2 } from 'lucide-react'
 import { uploadEvidencia, getEvidencias, uploadEvidenciaDesvio, getEvidenciasDesvio, uploadEvidenciaAtividade, getEvidenciasAtividade, downloadEvidencia, deleteEvidencia, desvincularAtividadeEvidencia } from '../api/evidencia'
 import { Evidencia, TipoEvidencia } from '../types'
@@ -61,11 +61,21 @@ export default function EvidenciaUpload({ naoConformidadeId, desvioId, atividade
   const isImage = (nome: string) => /\.(jpg|jpeg|png|gif|webp|bmp)$/i.test(nome)
   const isPdf = (nome: string) => /\.pdf$/i.test(nome)
 
-  // Load thumbnails for images
+  // Refs sempre com o valor mais recente, pra limpeza de unmount não fechar
+  // sobre o thumbnails/previewUrl do primeiro render (que ainda estão vazios).
+  const thumbnailsRef = useRef(thumbnails)
+  thumbnailsRef.current = thumbnails
+  const previewUrlRef = useRef(previewUrl)
+  previewUrlRef.current = previewUrl
+
+  // Load thumbnails for images. Usa a ref (não o estado) pra decidir o que já
+  // foi buscado, senão precisaria de "thumbnails" nas deps e reiniciaria o
+  // efeito a cada thumbnail carregada, correndo o risco de baixar a mesma
+  // imagem duas vezes enquanto o download anterior ainda está em voo.
   useEffect(() => {
     const imageEvidencias = evidencias.filter(ev => isImage(ev.nomeArquivo))
     imageEvidencias.forEach(async (ev) => {
-      if (thumbnails[ev.id]) return
+      if (thumbnailsRef.current[ev.id]) return
       try {
         const blob = await downloadEvidencia(ev.id)
         const url = URL.createObjectURL(blob)
@@ -74,11 +84,12 @@ export default function EvidenciaUpload({ naoConformidadeId, desvioId, atividade
     })
   }, [evidencias])
 
-  // Cleanup blob URLs
+  // Cleanup blob URLs (só no unmount — previewUrl às vezes é a mesma URL de
+  // uma thumbnail reaproveitada, então não pode ser revogado a cada troca)
   useEffect(() => {
     return () => {
-      Object.values(thumbnails).forEach(url => URL.revokeObjectURL(url))
-      if (previewUrl) URL.revokeObjectURL(previewUrl)
+      Object.values(thumbnailsRef.current).forEach(url => URL.revokeObjectURL(url))
+      if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current)
     }
   }, [])
 
