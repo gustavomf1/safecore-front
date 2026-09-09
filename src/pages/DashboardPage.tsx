@@ -163,12 +163,18 @@ const SEVERITY_COLOR: Record<string, string> = {
 }
 
 // ─── custom tooltip ──────────────────────────────────────────────────────────
-const ChartTooltip = ({ active, payload, label }: any) => {
+interface ChartTooltipProps {
+  active?: boolean
+  payload?: { name: string; value: number; fill?: string; color?: string }[]
+  label?: string | number
+}
+
+const ChartTooltip = ({ active, payload, label }: ChartTooltipProps) => {
   if (!active || !payload?.length) return null
   return (
     <div className="bg-white dark:bg-[var(--bg-elevated)] border border-gray-200 dark:border-[var(--border-main)] rounded-lg px-3 py-2 shadow-md text-xs">
       {label && <div className="font-semibold text-slate-700 mb-1">{label}</div>}
-      {payload.map((p: any) => (
+      {payload.map((p) => (
         <div key={p.name} className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full" style={{ background: p.fill ?? p.color }} />
           <span className="text-slate-500">{p.name}:</span>

@@ -56,7 +56,7 @@ export default function ConvitePage() {
   }
 
   if (isError) {
-    const msg = (error as any)?.response?.data?.message ?? 'Convite inválido ou expirado'
+    const msg = (error as { response?: { data?: { message?: string } } })?.response?.data?.message ?? 'Convite inválido ou expirado'
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 max-w-sm w-full text-center">
@@ -169,7 +169,7 @@ export default function ConvitePage() {
 
           {mutation.isError && (
             <div className="bg-red-50 border border-red-100 rounded-lg p-3 text-red-600 text-xs">
-              {(mutation.error as any)?.response?.data?.message ?? 'Erro ao realizar cadastro'}
+              {(mutation.error as { response?: { data?: { message?: string } } } | null)?.response?.data?.message ?? 'Erro ao realizar cadastro'}
             </div>
           )}
 

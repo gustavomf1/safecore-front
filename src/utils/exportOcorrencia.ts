@@ -3,7 +3,7 @@ import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx'
 import { formatDate } from './date'
 import { downloadEvidencia } from '../api/evidencia'
-import type { Evidencia } from '../types'
+import type { Evidencia, Desvio, NaoConformidade } from '../types'
 
 declare module 'jspdf' {
   interface jsPDF {
@@ -19,7 +19,7 @@ interface NormaTrecho {
 }
 
 interface ExportOptions {
-  ocorrencia: any
+  ocorrencia: Desvio | NaoConformidade
   trechos?: NormaTrecho[]
   isDesvio: boolean
 }
@@ -154,6 +154,8 @@ export async function renderEvidenciasSection(doc: jsPDF, imagens: Evidencia[]):
 // ─────────────────────── PDF (interno) ────────────────────────────────────
 async function buildPDFDoc(options: ExportOptions, imagens: Evidencia[]): Promise<jsPDF> {
   const { ocorrencia, trechos = [], isDesvio } = options
+  const nc = !isDesvio ? (ocorrencia as NaoConformidade) : null
+  const desvio = isDesvio ? (ocorrencia as Desvio) : null
   const doc = new jsPDF({ unit: 'mm', format: 'a4' })
   const pageW = doc.internal.pageSize.getWidth()
   const marginX = 15
@@ -191,8 +193,8 @@ async function buildPDFDoc(options: ExportOptions, imagens: Evidencia[]): Promis
   const tags: string[] = []
   tags.push(`Status: ${ocorrencia.status || 'CONCLUÍDO'}`)
   if (ocorrencia.regraDeOuro) tags.push('Regra de Ouro')
-  if (ocorrencia.reincidencia) tags.push('Reincidência')
-  if (!isDesvio && ocorrencia.nivelRisco) tags.push(`Risco: ${ocorrencia.nivelRisco}`)
+  if (!isDesvio && nc?.reincidencia) tags.push('Reincidência')
+  if (!isDesvio && nc?.nivelRisco) tags.push(`Risco: ${nc.nivelRisco}`)
   doc.text(tags.join('  ·  '), marginX, y)
   y += 8
 
@@ -204,19 +206,19 @@ async function buildPDFDoc(options: ExportOptions, imagens: Evidencia[]): Promis
     ['Registrado por', ocorrencia.usuarioCriacaoNome || ocorrencia.tecnicoNome || '—'],
   ]
   if (isDesvio) {
-    rows.push(['Resp. pelo Desvio', ocorrencia.responsavelDesvioNome || '—'])
-    rows.push(['Resp. pela Tratativa', ocorrencia.responsavelTrativaNome || '—'])
+    rows.push(['Resp. pelo Desvio', desvio?.responsavelDesvioNome || '—'])
+    rows.push(['Resp. pela Tratativa', desvio?.responsavelTrativaNome || '—'])
   }
   if (!isDesvio) {
-    rows.push(['Data Limite', formatDate(ocorrencia.dataLimiteResolucao) || '—'])
+    rows.push(['Data Limite', formatDate(nc?.dataLimiteResolucao) || '—'])
     rows.push(['Eng. Responsável pela Tratativa',
-      ocorrencia.responsavelTrativaNome
-        ? `${ocorrencia.responsavelTrativaNome} (${ocorrencia.responsavelTrativaEmail ?? ''})`
-        : ocorrencia.responsavelTrativaEmail || '—'])
+      nc?.responsavelTrativaNome
+        ? `${nc.responsavelTrativaNome} (${nc.responsavelTrativaEmail ?? ''})`
+        : nc?.responsavelTrativaEmail || '—'])
     rows.push(['Eng. Responsável pela NC',
-      ocorrencia.responsavelNcNome
-        ? `${ocorrencia.responsavelNcNome} (${ocorrencia.responsavelNcEmail ?? ''})`
-        : ocorrencia.responsavelNcEmail || '—'])
+      nc?.responsavelNcNome
+        ? `${nc.responsavelNcNome} (${nc.responsavelNcEmail ?? ''})`
+        : nc?.responsavelNcEmail || '—'])
   }
 
   autoTable(doc, {
@@ -247,7 +249,7 @@ async function buildPDFDoc(options: ExportOptions, imagens: Evidencia[]): Promis
   y += descLines.length * 5 + 6
 
   // Orientação Realizada (Desvio only)
-  if (isDesvio && ocorrencia.orientacaoRealizada) {
+  if (isDesvio && desvio?.orientacaoRealizada) {
     if (y > 250) { doc.addPage(); y = 20 }
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(10)
@@ -257,14 +259,14 @@ async function buildPDFDoc(options: ExportOptions, imagens: Evidencia[]): Promis
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(9)
     doc.setTextColor(30, 41, 59)
-    const orientLines = doc.splitTextToSize(ocorrencia.orientacaoRealizada, pageW - marginX * 2)
+    const orientLines = doc.splitTextToSize(desvio.orientacaoRealizada, pageW - marginX * 2)
     if (y + orientLines.length * 5 > 275) { doc.addPage(); y = 20 }
     doc.text(orientLines, marginX, y)
     y += orientLines.length * 5 + 6
   }
 
   // Normas (NC only)
-  if (!isDesvio && ocorrencia.normas && ocorrencia.normas.length > 0) {
+  if (!isDesvio && nc?.normas && nc.normas.length > 0) {
     if (y > 250) { doc.addPage(); y = 20 }
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(10)
@@ -273,7 +275,7 @@ async function buildPDFDoc(options: ExportOptions, imagens: Evidencia[]): Promis
     y += 3
 
     const normaRows: [string, string, string][] = []
-    for (const n of ocorrencia.normas) {
+    for (const n of nc.normas) {
       const ts = trechos.filter((t: NormaTrecho) => t.normaId === n.id)
       if (ts.length === 0) {
         normaRows.push([n.titulo, '—', '—'])
@@ -301,13 +303,13 @@ async function buildPDFDoc(options: ExportOptions, imagens: Evidencia[]): Promis
   // Histórico de Tratativa (NC only)
   if (!isDesvio) {
     const hist: [string, string, string, string][] = []
-    ocorrencia.devolutivas?.forEach((d: any, i: number) => {
+    nc?.devolutivas?.forEach((d, i) => {
       hist.push([`Plano de Ação #${i + 1}`, d.descricaoPlanoAcao || '', d.engenheiroNome || '—', formatDate(d.dataDevolutiva)])
     })
-    ocorrencia.execucoes?.forEach((e: any, i: number) => {
+    nc?.execucoes?.forEach((e, i) => {
       hist.push([`Execução #${i + 1}`, e.descricaoAcaoExecutada || '', e.engenheiroNome || '—', formatDate(e.dataExecucao)])
     })
-    ocorrencia.validacoes?.forEach((v: any, i: number) => {
+    nc?.validacoes?.forEach((v, i) => {
       hist.push([
         `Validação #${i + 1} — ${v.parecer === 'APROVADO' ? 'Aprovada' : 'Reprovada'}`,
         v.observacao || '',
@@ -428,31 +430,33 @@ export function exportOcorrenciaToExcel({ ocorrencia, trechos = [], isDesvio }: 
     ['Regra de Ouro', ocorrencia.regraDeOuro ? 'Sim' : 'Não'],
   ]
   if (isDesvio) {
-    resumo.push(['Resp. pelo Desvio', ocorrencia.responsavelDesvioNome || ''])
-    resumo.push(['Resp. pela Tratativa', ocorrencia.responsavelTrativaNome || ''])
-    resumo.push(['Orientação Realizada', ocorrencia.orientacaoRealizada || ''])
+    const desvio = ocorrencia as Desvio
+    resumo.push(['Resp. pelo Desvio', desvio.responsavelDesvioNome || ''])
+    resumo.push(['Resp. pela Tratativa', desvio.responsavelTrativaNome || ''])
+    resumo.push(['Orientação Realizada', desvio.orientacaoRealizada || ''])
   }
   if (!isDesvio) {
-    resumo.push(['Reincidência', ocorrencia.reincidencia ? 'Sim' : 'Não'])
-    resumo.push(['Nível de Risco', ocorrencia.nivelRisco || ''])
-    resumo.push(['Data Limite', formatDate(ocorrencia.dataLimiteResolucao) || ''])
+    const nc = ocorrencia as NaoConformidade
+    resumo.push(['Reincidência', nc.reincidencia ? 'Sim' : 'Não'])
+    resumo.push(['Nível de Risco', nc.nivelRisco || ''])
+    resumo.push(['Data Limite', formatDate(nc.dataLimiteResolucao) || ''])
     resumo.push(['Eng. Responsável pela Tratativa',
-      ocorrencia.responsavelTrativaNome
-        ? `${ocorrencia.responsavelTrativaNome} (${ocorrencia.responsavelTrativaEmail ?? ''})`
-        : ocorrencia.responsavelTrativaEmail || ''])
+      nc.responsavelTrativaNome
+        ? `${nc.responsavelTrativaNome} (${nc.responsavelTrativaEmail ?? ''})`
+        : nc.responsavelTrativaEmail || ''])
     resumo.push(['Eng. Responsável pela NC',
-      ocorrencia.responsavelNcNome
-        ? `${ocorrencia.responsavelNcNome} (${ocorrencia.responsavelNcEmail ?? ''})`
-        : ocorrencia.responsavelNcEmail || ''])
+      nc.responsavelNcNome
+        ? `${nc.responsavelNcNome} (${nc.responsavelNcEmail ?? ''})`
+        : nc.responsavelNcEmail || ''])
   }
   const wsResumo = XLSX.utils.aoa_to_sheet(resumo)
   wsResumo['!cols'] = [{ wch: 28 }, { wch: 70 }]
   XLSX.utils.book_append_sheet(wb, wsResumo, 'Resumo')
 
   // Normas (NC only)
-  if (!isDesvio && ocorrencia.normas && ocorrencia.normas.length > 0) {
+  if (!isDesvio && (ocorrencia as NaoConformidade).normas && (ocorrencia as NaoConformidade).normas.length > 0) {
     const normas: (string | null)[][] = [['Norma', 'Cláusula', 'Trecho']]
-    for (const n of ocorrencia.normas) {
+    for (const n of (ocorrencia as NaoConformidade).normas) {
       const ts = trechos.filter((t: NormaTrecho) => t.normaId === n.id)
       if (ts.length === 0) normas.push([n.titulo, '', ''])
       else for (const t of ts) normas.push([n.titulo, t.clausulaReferencia || '', t.textoEditado])
@@ -464,12 +468,13 @@ export function exportOcorrenciaToExcel({ ocorrencia, trechos = [], isDesvio }: 
 
   // Histórico (NC only)
   if (!isDesvio) {
+    const nc = ocorrencia as NaoConformidade
     const hist: (string | null)[][] = [['Etapa', 'Detalhes', 'Responsável', 'Data']]
-    ocorrencia.devolutivas?.forEach((d: any, i: number) =>
+    nc.devolutivas?.forEach((d, i) =>
       hist.push([`Plano de Ação #${i + 1}`, d.descricaoPlanoAcao || '', d.engenheiroNome || '', formatDate(d.dataDevolutiva)]))
-    ocorrencia.execucoes?.forEach((e: any, i: number) =>
+    nc.execucoes?.forEach((e, i) =>
       hist.push([`Execução #${i + 1}`, e.descricaoAcaoExecutada || '', e.engenheiroNome || '', formatDate(e.dataExecucao)]))
-    ocorrencia.validacoes?.forEach((v: any, i: number) =>
+    nc.validacoes?.forEach((v, i) =>
       hist.push([
         `Validação #${i + 1} — ${v.parecer === 'APROVADO' ? 'Aprovada' : 'Reprovada'}`,
         v.observacao || '',
