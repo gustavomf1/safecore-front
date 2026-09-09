@@ -14,7 +14,6 @@ import {
 } from 'lucide-react'
 import EvidenciaUpload from '../components/EvidenciaUpload'
 import { useAuth } from '../contexts/AuthContext'
-import { useTheme } from '../contexts/ThemeContext'
 import { formatDate } from '../utils/date'
 import { exportOcorrenciaBundle, exportOcorrenciaToExcel } from '../utils/exportOcorrencia'
 import { getEvidencias, getEvidenciasDesvio } from '../api/evidencia'
@@ -59,8 +58,6 @@ export default function OcorrenciaDetailPage() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { user } = useAuth()
-  const { theme } = useTheme()
-  const dark = theme === 'dark'
   const isDesvio = tipo === 'DESVIO'
   const isTecnico = user?.perfil === 'TECNICO'
   const isAdmin = user?.isAdmin ?? false

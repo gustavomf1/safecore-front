@@ -32,7 +32,7 @@ export function getExt(nome: string) {
 }
 
 function sanitize(name: string) {
-  return (name || 'ocorrencia').replace(/[^a-z0-9_\-]+/gi, '_').slice(0, 60)
+  return (name || 'ocorrencia').replace(/[^a-z0-9_-]+/gi, '_').slice(0, 60)
 }
 
 function buildFileName(o: ExportOptions, ext: 'pdf' | 'xlsx' | 'zip') {

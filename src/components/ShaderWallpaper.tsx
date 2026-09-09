@@ -292,9 +292,9 @@ export function ShaderWallpaper({ className, initialVariant = 0, showSwitcher = 
     const uTime = gl.getUniformLocation(prog, 'uTime')
     const uRipples = gl.getUniformLocation(prog, 'uRipples[0]')
 
-    let start = performance.now()
+    const start = performance.now()
     let rafId = 0
-    let currMouse: [number, number] = [0.5, 0.5]
+    const currMouse: [number, number] = [0.5, 0.5]
 
     function resize() {
       const rect = canvas!.getBoundingClientRect()

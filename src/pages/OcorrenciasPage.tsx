@@ -42,7 +42,7 @@ export default function OcorrenciasPage() {
     isAdmin, busca, setBusca, meuPapel, setMeuPapel, page, setPage, pageSize, setPageSize,
     dataInicio, setDataInicio, dataFim, setDataFim,
     adminEmpresaId, setAdminEmpresaId, adminEstabelecimentoId, setAdminEstabelecimentoId,
-    empresasAdmin, estabelecimentosAdmin, matchBuscaEData, resetPage,
+    empresasAdmin, estabelecimentosAdmin, matchBuscaEData,
   } = useOcorrenciasFiltro()
 
   const { data: ocorrencias = [], isLoading } = useQuery({

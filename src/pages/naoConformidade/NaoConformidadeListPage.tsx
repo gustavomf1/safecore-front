@@ -7,7 +7,6 @@ import StatusBadge from '../../components/StatusBadge'
 import RiscoBadge from '../../components/RiscoBadge'
 import { useState } from 'react'
 import { StatusNaoConformidade } from '../../types'
-import { formatDate } from '../../utils/date'
 import PrazoBar from '../../components/PrazoBar'
 
 export default function NaoConformidadeListPage() {

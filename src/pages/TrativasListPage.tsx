@@ -132,14 +132,6 @@ export default function TrativasListPage() {
     return { label: item.status, color: 'text-slate-600 bg-slate-100' }
   }
 
-  const statusTabs: { key: StatusFiltro; label: string; count?: number; activeColor: string }[] = [
-    { key: 'TODOS', label: 'Todos', activeColor: 'bg-slate-800 text-white' },
-    { key: 'AGUARDANDO_TRATATIVA', label: 'Em Andamento', count: contadores.AGUARDANDO_TRATATIVA, activeColor: 'bg-yellow-600 text-white' },
-    { key: 'AGUARDANDO_VALIDACAO', label: 'Aguardando Validação', count: contadores.AGUARDANDO_VALIDACAO, activeColor: 'bg-indigo-600 text-white' },
-    { key: 'CONCLUIDAS', label: 'Concluídos', count: contadores.CONCLUIDAS, activeColor: 'bg-green-600 text-white' },
-    { key: 'VENCIDAS', label: 'Vencidas', count: contadores.VENCIDAS, activeColor: 'bg-red-600 text-white' },
-  ]
-
   return (
     <div className="space-y-5">
       {/* Header */}

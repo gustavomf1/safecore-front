@@ -28,7 +28,6 @@ import RiscoBadge from '../components/RiscoBadge'
 import { formatDate, formatDateTime } from '../utils/date'
 import { exportTratativaBundle } from '../utils/exportTratativa'
 import { TipoAcaoHistorico } from '../types'
-import { useTheme } from '../contexts/ThemeContext'
 import NcRiskMatrix from '../components/NcRiskMatrix'
 
 function SnapEvidImage({ id, nome, onClick }: { id: string; nome: string; onClick: () => void }) {
@@ -80,9 +79,6 @@ export default function TrativaDetailPage() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { user } = useAuth()
-  const { theme } = useTheme()
-  const dark = theme === 'dark'
-
   const isDesvio = tipo === 'DESVIO'
   const isEngenheiro = user?.perfil === 'ENGENHEIRO'
   const isExterno = user?.perfil === 'EXTERNO'
@@ -287,7 +283,6 @@ export default function TrativaDetailPage() {
   const showEngenheiroAguardaExecucao = !isDesvio && nc?.status === 'EM_EXECUCAO' && isEngenheiro
   const showAguardandoValidacaoFinal = !isDesvio && nc?.status === 'AGUARDANDO_VALIDACAO_FINAL' && isExterno
   const showAprovacaoEvidenciasForm = !isDesvio && nc?.status === 'AGUARDANDO_VALIDACAO_FINAL' && isEngenheiro
-  const showAbertaEngenheiro = false
   const showNcAguardandoAtivacao = !isDesvio && nc?.status === 'ABERTA'
   const showDesvioAberto = isDesvio && desvio?.status === 'ABERTO'
 

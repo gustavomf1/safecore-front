@@ -10,7 +10,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import ConfirmActionModal from '../../components/ConfirmActionModal'
 import ConfirmModalUsuario from '../../components/ConfirmModalUsuario'
 import Pagination from '../../components/Pagination'
-import { Usuario, CriarUsuarioDiretoRequest, PerfilUsuario } from '../../types'
+import { Usuario, PerfilUsuario } from '../../types'
 
 const PAGE_SIZES = [15, 25, 50, 100, 200]
 

@@ -328,6 +328,8 @@ export default function RegistroOcorrenciaPage() {
     const successor = allNcs.find(nc => nc.ncAnteriorId === ncAnteriorId && nc.id !== id)
     if (!successor) return null
     let fim = successor
+    // loop intencional: percorre a cadeia de sucessores até não achar mais nenhum
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       const prox = allNcs.find(nc => nc.ncAnteriorId === fim.id && nc.id !== id)
       if (!prox) break

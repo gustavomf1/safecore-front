@@ -20,7 +20,7 @@ export interface NormaTrecho {
 }
 
 function sanitize(name: string) {
-  return (name || 'tratativa').replace(/[^a-z0-9_\-]+/gi, '_').slice(0, 60)
+  return (name || 'tratativa').replace(/[^a-z0-9_-]+/gi, '_').slice(0, 60)
 }
 
 async function renderAtividadeImagens(

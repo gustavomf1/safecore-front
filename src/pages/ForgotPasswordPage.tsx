@@ -181,7 +181,7 @@ function StepCodigo({
 
   const resend = async () => {
     setSecs(30)
-    try { await solicitarReset(email) } catch {}
+    try { await solicitarReset(email) } catch { /* reenvio silencioso, usuário pode tentar de novo */ }
   }
 
   return (
