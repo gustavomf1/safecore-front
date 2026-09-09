@@ -7,8 +7,6 @@ import { getTrechosNorma } from '../api/ncTrechoNorma'
 import {
   getNaoConformidade,
   submeterInvestigacao,
-  aprovarPlano,
-  rejeitarPlano,
   revisarAtividades,
   submeterExecucao,
   revisarExecucao,
@@ -105,8 +103,6 @@ export default function TrativaDetailPage() {
     next.has(id) ? next.delete(id) : next.add(id)
     return next
   })
-  const [motivoRejeicao, setMotivoRejeicao] = useState('')
-  const [comentarioAprovacao, setComentarioAprovacao] = useState('')
   const [confirmarEnvio, setConfirmarEnvio] = useState(false)
   const [exportMenuOpen, setExportMenuOpen] = useState(false)
   const [exporting, setExporting] = useState(false)
@@ -223,16 +219,6 @@ export default function TrativaDetailPage() {
       })
     },
     onSuccess: () => { invalidate(); setDecisoes({}); setComentarioRevisao(''); setDecisaoPorques(undefined) },
-  })
-
-  const mutAprovarPlano = useMutation({
-    mutationFn: () => aprovarPlano(id!, { comentario: comentarioAprovacao || undefined }),
-    onSuccess: () => { invalidate(); setComentarioAprovacao('') },
-  })
-
-  const mutRejeitarPlano = useMutation({
-    mutationFn: () => rejeitarPlano(id!, { motivo: motivoRejeicao }),
-    onSuccess: () => { invalidate(); setMotivoRejeicao('') },
   })
 
   const mutSubmeterExecucao = useMutation({

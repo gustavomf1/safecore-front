@@ -260,8 +260,6 @@ export default function TrativasListPage() {
       <div className="space-y-3">
         {paginadas.map(item => {
           const statusInfo = getStatusInfo(item)
-          const dias = item.tipo === 'NAO_CONFORMIDADE' ? getDiasRestantes(item.dataLimiteResolucao) : null
-
           const concluido = item.status === 'CONCLUIDO'
           return (
             <div key={item.id} className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5 shadow-sm">
