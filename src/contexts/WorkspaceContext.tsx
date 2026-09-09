@@ -67,6 +67,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   )
 }
 
+// Separar useWorkspace exigiria atualizar import em ~11 arquivos pra um ganho só de Fast Refresh
+// eslint-disable-next-line react-refresh/only-export-components
 export function useWorkspace() {
   return useContext(WorkspaceContext)
 }

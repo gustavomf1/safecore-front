@@ -16,7 +16,8 @@ import {
   X,
 } from 'lucide-react'
 import { createNorma, getNorma, updateNorma } from '../../api/norma'
-import { ChecklistItem, countChars, formatAuditShort, formatCount } from './NormasCommon'
+import { ChecklistItem } from './NormasCommon'
+import { countChars, formatAuditShort, formatCount } from './normasHelpers'
 import '../../styles/normas.css'
 
 const schema = z.object({

@@ -39,4 +39,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   )
 }
 
+// Separar useTheme exigiria atualizar import em outros arquivos pra um ganho só de Fast Refresh
+// eslint-disable-next-line react-refresh/only-export-components
 export const useTheme = () => useContext(ThemeContext)

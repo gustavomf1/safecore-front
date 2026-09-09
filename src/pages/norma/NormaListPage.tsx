@@ -16,14 +16,13 @@ import {
 import { deleteNorma, getNormas, reativarNorma } from '../../api/norma'
 import NormaDeactivateModal from '../../components/NormaDeactivateModal'
 import { Norma } from '../../types'
+import { NormaIcon, StatusPill } from './NormasCommon'
 import {
   firstName,
   formatAuditShort,
   formatCount,
   hasConteudo,
-  NormaIcon,
-  StatusPill,
-} from './NormasCommon'
+} from './normasHelpers'
 import '../../styles/normas.css'
 
 type StatusFilter = 'all' | 'ativo' | 'inativo'

@@ -1,7 +1,8 @@
 import { createPortal } from 'react-dom'
 import { AlertTriangle, BookOpen, Check, EyeOff, Info, PowerOff, RotateCcw, X } from 'lucide-react'
 import { Norma } from '../types'
-import { StatusPill, formatCount } from '../pages/norma/NormasCommon'
+import { StatusPill } from '../pages/norma/NormasCommon'
+import { formatCount } from '../pages/norma/normasHelpers'
 import '../styles/normas.css'
 
 interface Props {

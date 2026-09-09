@@ -90,6 +90,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 }
 
+// Separar useAuth exigiria atualizar import em ~25 arquivos pra um ganho só de Fast Refresh
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   return useContext(AuthContext)
 }

@@ -20,8 +20,8 @@ import {
 import { deleteNorma, getNorma, reativarNorma } from '../../api/norma'
 import { getNaoConformidades } from '../../api/naoConformidade'
 import NormaDeactivateModal from '../../components/NormaDeactivateModal'
+import { Avatar, StatusPill } from './NormasCommon'
 import {
-  Avatar,
   firstName,
   formatAuditDate,
   formatAuditShort,
@@ -29,8 +29,7 @@ import {
   hasConteudo,
   riscoMeta,
   statusNcMeta,
-  StatusPill,
-} from './NormasCommon'
+} from './normasHelpers'
 import '../../styles/normas.css'
 
 type DetailTab = 'texto' | 'ocorrencias'
