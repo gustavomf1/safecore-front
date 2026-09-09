@@ -336,7 +336,7 @@ export default function TrativaDetailPage() {
       {/* Page header: tags + title + subtitle */}
       <div>
         <div className="flex flex-wrap items-center gap-2 mb-2">
-          <CodigoBadge codigo={(ocorrencia as any).codigo} />
+          <CodigoBadge codigo={ocorrencia.codigo} />
           <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${isDesvio ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>
             {isDesvio ? 'Desvio' : 'Não Conformidade'}
           </span>
@@ -350,7 +350,7 @@ export default function TrativaDetailPage() {
             </>
           )}
           {isDesvio && desvio && <StatusBadge status={desvio.status} type="desvio" />}
-          {(ocorrencia as any).regraDeOuro && (
+          {ocorrencia.regraDeOuro && (
             <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-yellow-100 text-yellow-700 flex items-center gap-1">
               <Shield size={12} /> Regra de Ouro
             </span>
@@ -361,11 +361,11 @@ export default function TrativaDetailPage() {
             </span>
           )}
         </div>
-        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-1 break-words overflow-hidden">{(ocorrencia as any).titulo}</h1>
+        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-1 break-words overflow-hidden">{ocorrencia.titulo}</h1>
         <p className="text-sm text-slate-400 dark:text-slate-500">
-          {(ocorrencia as any).estabelecimentoNome}
-          {(ocorrencia as any).localizacaoNome ? ` · ${(ocorrencia as any).localizacaoNome}` : ''}
-          {' · registrada em '}{formatDateTime((ocorrencia as any).dataRegistro)}
+          {ocorrencia.estabelecimentoNome}
+          {ocorrencia.localizacaoNome ? ` · ${ocorrencia.localizacaoNome}` : ''}
+          {' · registrada em '}{formatDateTime(ocorrencia.dataRegistro)}
         </p>
       </div>
 
@@ -381,17 +381,17 @@ export default function TrativaDetailPage() {
             <div className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
               <div>
                 <p className="text-xs text-slate-400 mb-1 flex items-center gap-1"><Building2 size={11} /> Estabelecimento</p>
-                <p className="text-slate-800 dark:text-slate-200 font-medium">{(ocorrencia as any).estabelecimentoNome}</p>
+                <p className="text-slate-800 dark:text-slate-200 font-medium">{ocorrencia.estabelecimentoNome}</p>
               </div>
-              {(ocorrencia as any).localizacaoNome && (
+              {ocorrencia.localizacaoNome && (
                 <div>
                   <p className="text-xs text-slate-400 mb-1 flex items-center gap-1"><MapPin size={11} /> Localização</p>
-                  <p className="text-slate-800 dark:text-slate-200 font-medium">{(ocorrencia as any).localizacaoNome}</p>
+                  <p className="text-slate-800 dark:text-slate-200 font-medium">{ocorrencia.localizacaoNome}</p>
                 </div>
               )}
               <div>
                 <p className="text-xs text-slate-400 mb-1 flex items-center gap-1"><Calendar size={11} /> Data de Registro</p>
-                <p className="text-slate-800 dark:text-slate-200">{formatDateTime((ocorrencia as any).dataRegistro)}</p>
+                <p className="text-slate-800 dark:text-slate-200">{formatDateTime(ocorrencia.dataRegistro)}</p>
               </div>
               {!isDesvio && nc?.dataLimiteResolucao && (
                 <div>
@@ -405,13 +405,13 @@ export default function TrativaDetailPage() {
                   </div>
                 </div>
               )}
-              {((ocorrencia as any).tecnicoNome || (ocorrencia as any).usuarioCriacaoNome) && (
+              {(ocorrencia.tecnicoNome || ocorrencia.usuarioCriacaoNome) && (
                 <div>
                   <p className="text-xs text-slate-400 mb-1 flex items-center gap-1"><User size={11} /> Registrado por</p>
                   <p className="text-slate-800 dark:text-slate-200 break-words">
-                    {(ocorrencia as any).usuarioCriacaoNome
-                      ? `${(ocorrencia as any).usuarioCriacaoNome}${(ocorrencia as any).usuarioCriacaoEmail ? ` (${(ocorrencia as any).usuarioCriacaoEmail})` : ''}`
-                      : (ocorrencia as any).tecnicoNome}
+                    {ocorrencia.usuarioCriacaoNome
+                      ? `${ocorrencia.usuarioCriacaoNome}${ocorrencia.usuarioCriacaoEmail ? ` (${ocorrencia.usuarioCriacaoEmail})` : ''}`
+                      : ocorrencia.tecnicoNome}
                   </p>
                 </div>
               )}
@@ -421,7 +421,7 @@ export default function TrativaDetailPage() {
               </div>
               <div className="col-span-2">
                 <p className="text-xs text-slate-400 mb-1">Descrição</p>
-                <p className="text-slate-800 dark:text-slate-200 whitespace-pre-wrap break-words overflow-hidden">{(ocorrencia as any).descricao}</p>
+                <p className="text-slate-800 dark:text-slate-200 whitespace-pre-wrap break-words overflow-hidden">{ocorrencia.descricao}</p>
               </div>
               {!isDesvio && nc && nc.normas.length > 0 && (
                 <div className="col-span-2">
@@ -1403,7 +1403,7 @@ export default function TrativaDetailPage() {
                       {a.descricaoExecucao && <p className="text-xs text-slate-600 break-words mb-2 italic">"{a.descricaoExecucao}"</p>}
                       {a.evidencias?.length > 0 && (
                         <div className="flex flex-wrap gap-1.5 mb-3">
-                          {a.evidencias.map((ev: any) => (
+                          {a.evidencias.map((ev) => (
                             <button key={ev.id} onClick={() => handleDownloadEvidencia(ev.id, ev.nomeArquivo)}
                               className="flex items-center gap-1 px-2 py-1 rounded-md bg-white border border-slate-200 text-xs text-slate-600 hover:bg-slate-50 max-w-[180px]">
                               <FileText size={11} className="shrink-0" />
