@@ -24,35 +24,35 @@ function loadFromStorage<T>(key: string): T | null {
 }
 
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
-  const [empresa, setEmpresa] = useState<Empresa | null>(() => loadFromStorage('engseg_empresa'))
-  const [estabelecimento, setEstabelecimento] = useState<Estabelecimento | null>(() => loadFromStorage('engseg_estabelecimento'))
-  const [empresaFilha, setEmpresaFilha] = useState<Empresa | null>(() => loadFromStorage('engseg_empresa_filha'))
+  const [empresa, setEmpresa] = useState<Empresa | null>(() => loadFromStorage('safecore_empresa'))
+  const [estabelecimento, setEstabelecimento] = useState<Estabelecimento | null>(() => loadFromStorage('safecore_estabelecimento'))
+  const [empresaFilha, setEmpresaFilha] = useState<Empresa | null>(() => loadFromStorage('safecore_empresa_filha'))
 
   const selecionarEmpresa = useCallback((emp: Empresa) => {
-    localStorage.setItem('engseg_empresa', JSON.stringify(emp))
-    localStorage.removeItem('engseg_estabelecimento')
-    localStorage.removeItem('engseg_empresa_filha')
+    localStorage.setItem('safecore_empresa', JSON.stringify(emp))
+    localStorage.removeItem('safecore_estabelecimento')
+    localStorage.removeItem('safecore_empresa_filha')
     setEmpresa(emp)
     setEstabelecimento(null)
     setEmpresaFilha(null)
   }, [])
 
   const selecionarEstabelecimento = useCallback((est: Estabelecimento) => {
-    localStorage.setItem('engseg_estabelecimento', JSON.stringify(est))
-    localStorage.removeItem('engseg_empresa_filha')
+    localStorage.setItem('safecore_estabelecimento', JSON.stringify(est))
+    localStorage.removeItem('safecore_empresa_filha')
     setEstabelecimento(est)
     setEmpresaFilha(null)
   }, [])
 
   const selecionarEmpresaFilha = useCallback((emp: Empresa) => {
-    localStorage.setItem('engseg_empresa_filha', JSON.stringify(emp))
+    localStorage.setItem('safecore_empresa_filha', JSON.stringify(emp))
     setEmpresaFilha(emp)
   }, [])
 
   const limpar = useCallback(() => {
-    localStorage.removeItem('engseg_empresa')
-    localStorage.removeItem('engseg_estabelecimento')
-    localStorage.removeItem('engseg_empresa_filha')
+    localStorage.removeItem('safecore_empresa')
+    localStorage.removeItem('safecore_estabelecimento')
+    localStorage.removeItem('safecore_empresa_filha')
     setEmpresa(null)
     setEstabelecimento(null)
     setEmpresaFilha(null)

@@ -15,7 +15,7 @@ client.interceptors.request.use((config) => {
     config.url?.includes('/auth/refresh') ||
     config.url?.includes('/auth/logout')
 
-  const token = localStorage.getItem('engseg_token')
+  const token = localStorage.getItem('safecore_token')
   if (token && !isAuthRoute) {
     config.headers.Authorization = `Bearer ${token}`
   }
@@ -32,25 +32,25 @@ function notifyWaiters(token: string | null) {
 }
 
 function fullLogout() {
-  localStorage.removeItem('engseg_token')
-  localStorage.removeItem('engseg_refresh_token')
-  localStorage.removeItem('engseg_user')
-  localStorage.removeItem('engseg_empresa')
-  localStorage.removeItem('engseg_estabelecimento')
-  localStorage.removeItem('engseg_empresa_filha')
+  localStorage.removeItem('safecore_token')
+  localStorage.removeItem('safecore_refresh_token')
+  localStorage.removeItem('safecore_user')
+  localStorage.removeItem('safecore_empresa')
+  localStorage.removeItem('safecore_estabelecimento')
+  localStorage.removeItem('safecore_empresa_filha')
   window.location.href = '/login'
 }
 
 async function refreshAccessToken(): Promise<string | null> {
-  const refreshToken = localStorage.getItem('engseg_refresh_token')
+  const refreshToken = localStorage.getItem('safecore_refresh_token')
   if (!refreshToken) return null
   try {
     // axios "cru" (sem o interceptor) para não recursar
     const resp = await axios.post(`${baseURL}/auth/refresh`, { refreshToken })
     const newToken = resp.data.token as string
     const newRefresh = resp.data.refreshToken as string
-    localStorage.setItem('engseg_token', newToken)
-    localStorage.setItem('engseg_refresh_token', newRefresh)
+    localStorage.setItem('safecore_token', newToken)
+    localStorage.setItem('safecore_refresh_token', newRefresh)
     return newToken
   } catch {
     return null
