@@ -14,7 +14,7 @@ const ThemeContext = createContext<ThemeContextType>({
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
-    const saved = localStorage.getItem('engseg_theme')
+    const saved = localStorage.getItem('safecore_theme')
     return (saved === 'dark' ? 'dark' : 'light') as Theme
   })
 
@@ -25,7 +25,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     } else {
       root.classList.remove('dark')
     }
-    localStorage.setItem('engseg_theme', theme)
+    localStorage.setItem('safecore_theme', theme)
   }, [theme])
 
   function toggleTheme() {

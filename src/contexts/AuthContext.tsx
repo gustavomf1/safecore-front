@@ -34,8 +34,8 @@ function decodeTokenPayload(token: string): Record<string, unknown> | null {
 
 function loadUserFromStorage(): AuthUser | null {
   try {
-    const raw = localStorage.getItem('engseg_user')
-    const token = localStorage.getItem('engseg_token')
+    const raw = localStorage.getItem('safecore_user')
+    const token = localStorage.getItem('safecore_token')
     if (raw && token) {
       const stored = JSON.parse(raw) as AuthUser
       const claims = decodeTokenPayload(token)
@@ -56,15 +56,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback((id: string, token: string, refreshToken: string, nome: string, email: string, perfil: PerfilUsuario, isAdmin: boolean) => {
     const authUser: AuthUser = { id, token, nome, email, perfil, isAdmin }
-    localStorage.setItem('engseg_token', token)
-    localStorage.setItem('engseg_refresh_token', refreshToken)
-    localStorage.setItem('engseg_user', JSON.stringify(authUser))
+    localStorage.setItem('safecore_token', token)
+    localStorage.setItem('safecore_refresh_token', refreshToken)
+    localStorage.setItem('safecore_user', JSON.stringify(authUser))
     setUser(authUser)
   }, [])
 
   const logout = useCallback(() => {
     // Revoga o refresh token no servidor (fire-and-forget).
-    const refreshToken = localStorage.getItem('engseg_refresh_token')
+    const refreshToken = localStorage.getItem('safecore_refresh_token')
     if (refreshToken) {
       const base = (import.meta.env.VITE_API_URL ?? '/api') as string
       fetch(`${base}/auth/logout`, {
@@ -74,11 +74,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         keepalive: true,
       }).catch(() => {})
     }
-    localStorage.removeItem('engseg_token')
-    localStorage.removeItem('engseg_refresh_token')
-    localStorage.removeItem('engseg_user')
-    localStorage.removeItem('engseg_empresa')
-    localStorage.removeItem('engseg_estabelecimento')
+    localStorage.removeItem('safecore_token')
+    localStorage.removeItem('safecore_refresh_token')
+    localStorage.removeItem('safecore_user')
+    localStorage.removeItem('safecore_empresa')
+    localStorage.removeItem('safecore_estabelecimento')
     setUser(null)
     queryClient.clear()
   }, [queryClient])
