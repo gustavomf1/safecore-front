@@ -30,7 +30,7 @@ jobs:
           context: .
           push: true
           build-args: |
-            VITE_API_URL=https://api.safecoreteste.online
+            VITE_API_URL=https://api.safecoreteste.online/api
           tags: |
             ghcr.io/gustavomf1/engseg-front:latest
             ghcr.io/gustavomf1/engseg-front:${{ github.sha }}
