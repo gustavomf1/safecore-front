@@ -32,8 +32,8 @@ jobs:
           build-args: |
             VITE_API_URL=https://api.safecoreteste.online/api
           tags: |
-            ghcr.io/gustavomf1/engseg-front:latest
-            ghcr.io/gustavomf1/engseg-front:${{ github.sha }}
+            ghcr.io/gustavomf1/safecore-front:latest
+            ghcr.io/gustavomf1/safecore-front:${{ github.sha }}
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1
