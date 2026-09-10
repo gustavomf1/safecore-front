@@ -31,6 +31,9 @@ import ConfirmModalOcorrencia from '../components/ConfirmModalOcorrencia'
 import { getEmailsPadrao } from '../api/emailPadrao'
 import type { EmailPadrao, StatusNaoConformidade } from '../types'
 
+// Busca de trecho de NR por IA — desabilitada temporariamente
+const BUSCA_TRECHO_IA_ENABLED = false
+
 // ─── Local UI components ──────────────────────────────────────────────────────
 
 function Section({ num, title, subtitle, icon, accent = '#58a6ff', children }: {
@@ -154,7 +157,7 @@ function NormCheck({ code, name, checked, hasConteudo, onToggle, onSearch, onWri
       </button>
       {checked && (
         <div className="nc-norm-actions">
-          {hasConteudo && (
+          {BUSCA_TRECHO_IA_ENABLED && hasConteudo && (
             <button type="button" onClick={onSearch} className="nc-btn nc-btn-blue-soft" style={{ fontSize: 12, padding: '6px 10px' }}>
               <Search size={13} /> Buscar trecho
             </button>
