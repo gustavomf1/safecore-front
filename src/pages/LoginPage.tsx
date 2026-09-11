@@ -8,24 +8,6 @@ import safecoreIcon from '../assets/branding/safecore-icon.png'
 
 const accent = '#0ea5e9'
 
-function CornerTicks({ color }: { color: string }) {
-  const len = 24
-  const pos = 24
-  const base: React.CSSProperties = { position: 'absolute', background: color }
-  return (
-    <>
-      <div style={{ ...base, top: pos, left: pos, width: len, height: 1 }} />
-      <div style={{ ...base, top: pos, left: pos, width: 1, height: len }} />
-      <div style={{ ...base, top: pos, right: pos, width: len, height: 1 }} />
-      <div style={{ ...base, top: pos, right: pos, width: 1, height: len }} />
-      <div style={{ ...base, bottom: pos, left: pos, width: len, height: 1 }} />
-      <div style={{ ...base, bottom: pos, left: pos, width: 1, height: len }} />
-      <div style={{ ...base, bottom: pos, right: pos, width: len, height: 1 }} />
-      <div style={{ ...base, bottom: pos, right: pos, width: 1, height: len }} />
-    </>
-  )
-}
-
 export default function LoginPage() {
   const { login } = useAuth()
   const { theme, toggleTheme } = useTheme()
@@ -37,10 +19,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
 
   const dark = theme === 'dark'
-  const bg = dark ? '#0a0e1a' : '#f1f5f9'
-  const cardBg = dark ? '#11182c' : '#ffffff'
-  const gridColor = dark ? 'rgba(14,165,233,0.06)' : 'rgba(14,165,233,0.1)'
-  const tickColor = dark ? 'rgba(255,255,255,0.15)' : 'rgba(15,23,42,0.2)'
+  const cardBg = dark ? '#0a0e1a' : '#ffffff'
   const textMain = dark ? 'text-white' : 'text-slate-900'
   const textDim = dark ? 'text-white/50' : 'text-slate-500'
   const labelColor = dark ? 'text-white/60' : 'text-slate-500'
@@ -65,66 +44,45 @@ export default function LoginPage() {
   }
 
   return (
-    <div
-      className="w-full min-h-screen flex items-center justify-center p-4 lg:p-10 relative overflow-hidden"
-      style={{ background: bg }}
-    >
-      {/* blueprint grid */}
+    <div className="w-full min-h-screen grid lg:grid-cols-2">
+      {/* LEFT — full-bleed hero image */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="relative hidden lg:block"
         style={{
-          backgroundImage: `linear-gradient(${gridColor} 1px, transparent 1px), linear-gradient(90deg, ${gridColor} 1px, transparent 1px)`,
-          backgroundSize: '32px 32px',
+          backgroundImage: `url(${loginHero})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'left center',
         }}
       />
 
-      {/* corner ticks */}
-      <CornerTicks color={tickColor} />
-
-      {/* theme toggle */}
-      <button
-        onClick={toggleTheme}
-        className="absolute top-5 right-5 z-20 flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium border transition"
-        style={{
-          background: dark ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.06)',
-          borderColor: dark ? 'rgba(255,255,255,0.12)' : 'rgba(15,23,42,0.12)',
-          color: dark ? 'rgba(255,255,255,0.6)' : 'rgba(15,23,42,0.5)',
-        }}
-      >
-        <span>{dark ? '☀' : '☾'}</span>
-        <span>{dark ? 'Light' : 'Dark'}</span>
-      </button>
-
-      {/* card */}
+      {/* RIGHT — form */}
       <div
-        className="relative z-10 w-full max-w-5xl grid lg:grid-cols-[1.1fr_1fr] items-stretch rounded-2xl overflow-hidden"
-        style={{
-          background: cardBg,
-          boxShadow: dark
-            ? '0 20px 60px -20px rgba(0,0,0,0.8)'
-            : '0 30px 80px -30px rgba(15,23,42,0.2)',
-        }}
+        className="relative flex flex-col min-h-screen"
+        style={{ background: cardBg }}
       >
-        {/* LEFT */}
-        <div
-          className="relative hidden lg:block min-h-[560px]"
+        {/* theme toggle */}
+        <button
+          onClick={toggleTheme}
+          className="absolute top-5 right-5 z-20 flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium border transition"
           style={{
-            backgroundImage: `url(${loginHero})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            background: dark ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.06)',
+            borderColor: dark ? 'rgba(255,255,255,0.12)' : 'rgba(15,23,42,0.12)',
+            color: dark ? 'rgba(255,255,255,0.6)' : 'rgba(15,23,42,0.5)',
           }}
-        />
+        >
+          <span>{dark ? '☀' : '☾'}</span>
+          <span>{dark ? 'Light' : 'Dark'}</span>
+        </button>
 
-        {/* Compact SafeCore header shown only when the hero image is hidden (mobile) */}
-        <div className="flex lg:hidden items-center gap-2.5 px-8 pt-8" style={{ background: cardBg }}>
+        {/* Compact SafeCore header — always shown on the form side, doubles as mobile branding */}
+        <div className="flex items-center gap-2.5 px-8 pt-8 lg:px-12">
           <img src={safecoreIcon} alt="SafeCore" className="w-9 h-9 rounded-lg object-cover" />
           <span className={`text-lg font-bold ${textMain}`}>
             Safe<span style={{ color: accent }}>Core</span>
           </span>
         </div>
 
-        {/* RIGHT — form */}
-        <div className="p-8 lg:p-12 flex items-center" style={{ background: cardBg }}>
+        <div className="flex-1 flex items-center justify-center p-8 lg:p-12">
           <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-5">
             <div>
               <h1 className={`text-3xl font-bold tracking-tight ${textMain}`}>
