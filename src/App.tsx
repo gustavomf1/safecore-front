@@ -32,6 +32,7 @@ import EmailPadraoPage from './pages/emailPadrao/EmailPadraoPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import RelatoriosPage from './pages/relatorios/RelatoriosPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
+import AccountDeletionPage from './pages/AccountDeletionPage'
 
 function DefaultRedirect() {
   const { user } = useAuth()
@@ -51,6 +52,7 @@ export default function App() {
             <Route path="/convite/:token" element={<ConvitePage />} />
             <Route path="/esqueci-senha" element={<ForgotPasswordPage />} />
             <Route path="/privacidade" element={<PrivacyPolicyPage />} />
+            <Route path="/exclusao-de-conta" element={<AccountDeletionPage />} />
             <Route path="/selecionar" element={
               <PrivateRoute>
                 <SeletorPage />
