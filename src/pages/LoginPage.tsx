@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useTheme } from '../contexts/ThemeContext'
 import { login as loginApi } from '../api/auth'
-import Shield3D from '../components/Shield3D'
+import loginHero from '../assets/branding/login-hero.jpg'
+import safecoreIcon from '../assets/branding/safecore-icon.png'
 
 const accent = '#0ea5e9'
 
@@ -106,49 +107,20 @@ export default function LoginPage() {
       >
         {/* LEFT */}
         <div
-          className="relative flex flex-col justify-between p-8 lg:p-12 overflow-hidden"
+          className="relative hidden lg:block min-h-[560px]"
           style={{
-            background: 'linear-gradient(180deg, #0b132b 0%, #060914 100%)',
+            backgroundImage: `url(${loginHero})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
           }}
-        >
-          <div className="flex items-center gap-3 text-white/60 text-[11px] font-mono uppercase tracking-[0.2em]">
-            <div className="w-8 h-px bg-white/30" />
-            <span>SGS-001</span>
-          </div>
+        />
 
-          <div className="flex items-center justify-center my-6">
-            <div className="relative">
-              {/* crosshair ticks */}
-              <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 2 }}>
-                <div className="absolute left-1/2 -top-4 -translate-x-1/2 w-px h-3 bg-white/30" />
-                <div className="absolute left-1/2 -bottom-4 -translate-x-1/2 w-px h-3 bg-white/30" />
-                <div className="absolute top-1/2 -left-4 -translate-y-1/2 h-px w-3 bg-white/30" />
-                <div className="absolute top-1/2 -right-4 -translate-y-1/2 h-px w-3 bg-white/30" />
-              </div>
-              <Shield3D size={260} palette="slate" />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <div className="text-white text-xl font-bold tracking-tight">Sentinela SGS</div>
-            <div className="text-white/50 text-sm max-w-[280px] leading-relaxed">
-              Plataforma de engenharia de segurança para times que não aceitam atalho.
-            </div>
-            <div className="flex gap-6 pt-3 text-white/40 text-[11px] font-mono">
-              <div>
-                <div className="text-white/70 text-lg font-semibold font-sans">47</div>
-                <div>OCORRÊNCIAS</div>
-              </div>
-              <div>
-                <div className="text-white/70 text-lg font-semibold font-sans">22</div>
-                <div>CONCLUÍDAS</div>
-              </div>
-              <div>
-                <div className="text-white/70 text-lg font-semibold font-sans">65%</div>
-                <div>RESOLUÇÃO</div>
-              </div>
-            </div>
-          </div>
+        {/* Compact SafeCore header shown only when the hero image is hidden (mobile) */}
+        <div className="flex lg:hidden items-center gap-2.5 px-8 pt-8" style={{ background: cardBg }}>
+          <img src={safecoreIcon} alt="SafeCore" className="w-9 h-9 rounded-lg object-cover" />
+          <span className={`text-lg font-bold ${textMain}`}>
+            Safe<span style={{ color: accent }}>Core</span>
+          </span>
         </div>
 
         {/* RIGHT — form */}
@@ -240,7 +212,7 @@ export default function LoginPage() {
             </button>
 
             <div className={`text-center text-xs ${footerColor}`}>
-              Sistema de Gestão de Segurança · v1.0.0
+              SafeCore · Sistema de Gestão de Segurança · v1.0.0
             </div>
           </form>
         </div>

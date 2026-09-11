@@ -10,6 +10,7 @@ import {
   Building2, MapPin, Users, RefreshCw, X, Navigation, Sun, Moon,
   ChevronsLeft, ChevronsRight, Mail, ChevronDown, ChevronUp, BookOpen, Briefcase, FileBarChart2
 } from 'lucide-react'
+import safecoreIcon from '../assets/branding/safecore-icon.png'
 
 interface SidebarProps {
   mobileOpen: boolean
@@ -69,18 +70,16 @@ export default function Sidebar({ mobileOpen, onMobileClose, collapsed, onToggle
         <div className={`flex items-center ${compact ? 'justify-center' : 'justify-between'} px-2 mb-6`}>
           {show ? (
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 sidebar-logo rounded-lg flex items-center justify-center">
-                <Shield size={16} className="text-white" />
-              </div>
+              <img src={safecoreIcon} alt="SafeCore" className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
               <div>
-                <div className="text-white font-bold text-sm">SGS</div>
+                <div className="text-white font-bold text-sm">
+                  Safe<span className="text-blue-400">Core</span>
+                </div>
                 <div className="sidebar-muted text-xs">Sistema de Gestão</div>
               </div>
             </div>
           ) : (
-            <div className="w-8 h-8 sidebar-logo rounded-lg flex items-center justify-center mx-auto">
-              <Shield size={16} className="text-white" />
-            </div>
+            <img src={safecoreIcon} alt="SafeCore" className="w-8 h-8 rounded-lg object-cover mx-auto" />
           )}
           {mobile && (
             <button onClick={onMobileClose} className="p-1 sidebar-item-text hover:text-white">
@@ -278,7 +277,7 @@ export default function Sidebar({ mobileOpen, onMobileClose, collapsed, onToggle
           {show && (
             <div className="text-center sidebar-section text-xs">
               <div>Versao 1.0.0</div>
-              <div>&copy; 2024 ERS</div>
+              <div>&copy; 2026 SafeCore</div>
             </div>
           )}
         </div>
