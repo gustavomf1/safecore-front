@@ -1,9 +1,18 @@
 interface PrazoBarProps {
-  dataLimite: string
+  dataLimite?: string | null
   vencida?: boolean
 }
 
 export default function PrazoBar({ dataLimite, vencida }: PrazoBarProps) {
+  if (!dataLimite) {
+    return (
+      <div className="flex flex-col gap-1 min-w-[100px]">
+        <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden" />
+        <span className="text-xs font-medium text-slate-400">Aguardando tratativa</span>
+      </div>
+    )
+  }
+
   const hoje = new Date()
   hoje.setHours(0, 0, 0, 0)
 

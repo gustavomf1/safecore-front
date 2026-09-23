@@ -238,7 +238,7 @@ export default function TrativaDetailPage() {
     onSuccess: () => { invalidate(); setDecisoesExecucao({}); setComentarioRevisaoExecucao('') },
   })
 
-  function getDiasRestantes(dataLimite?: string) {
+  function getDiasRestantes(dataLimite?: string | null) {
     if (!dataLimite) return null
     const limite = new Date(dataLimite)
     const hoje = new Date()

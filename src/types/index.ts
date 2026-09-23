@@ -265,7 +265,7 @@ export interface NaoConformidade {
   responsavelNcNome: string
   responsavelNcEmail: string
   responsavelNcPerfil?: string
-  dataLimiteResolucao: string
+  dataLimiteResolucao: string | null
   usuarioCriacaoNome?: string
   usuarioCriacaoEmail?: string
   usuarioCriacaoId?: string

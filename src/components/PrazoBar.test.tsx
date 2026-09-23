@@ -33,4 +33,9 @@ describe('PrazoBar', () => {
     render(<PrazoBar dataLimite="2026-01-15" />)
     expect(screen.getByText('Hoje')).toBeInTheDocument()
   })
+
+  it('mostra "Aguardando tratativa" quando ainda não há data limite definida', () => {
+    render(<PrazoBar dataLimite={null} />)
+    expect(screen.getByText('Aguardando tratativa')).toBeInTheDocument()
+  })
 })
