@@ -6,7 +6,7 @@ function parseUTC(dateStr: string): Date {
   return new Date(dateStr.endsWith('Z') ? dateStr : dateStr + 'Z')
 }
 
-export function formatDate(dateStr?: string): string {
+export function formatDate(dateStr?: string | null): string {
   if (!dateStr) return '—'
   return parseUTC(dateStr).toLocaleDateString('pt-BR', { timeZone: TZ })
 }

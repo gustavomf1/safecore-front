@@ -403,10 +403,6 @@ export default function RegistroOcorrenciaPage() {
     if (user?.isAdmin && !isEditing) setValue('estabelecimentoId', adminEstabelecimentoId)
   }, [adminEstabelecimentoId, user?.isAdmin, isEditing, setValue])
 
-  const dataLimite = new Date()
-  dataLimite.setDate(dataLimite.getDate() + 30)
-  const dataLimiteStr = dataLimite.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })
-
   const mutation = useMutation({
     mutationFn: async ({ formData: data, emailsManuais, emailsPadraoExcluidos }: MutationPayload) => {
       const base = {
@@ -962,10 +958,10 @@ export default function RegistroOcorrenciaPage() {
             >
               <div className="nc-form-row-2">
                 {tipo === 'NAO_CONFORMIDADE' && !isEditing && (
-                  <Field label="Data Limite para Tratativa" helper="Prazo padrão: 30 dias a partir do registro">
+                  <Field label="Data Limite para Tratativa" helper="Prazo de 30 dias começa a contar quando a NC for enviada para tratativa">
                     <div className="nc-input-wrap has-icon">
                       <span className="nc-input-icon"><Calendar size={15} /></span>
-                      <input type="text" value={dataLimiteStr} readOnly className="nc-input" style={{ color: '#79b8ff' }} />
+                      <input type="text" value="Definido no envio para tratativa" readOnly className="nc-input" style={{ color: 'var(--fg-3)' }} />
                     </div>
                   </Field>
                 )}
@@ -1125,7 +1121,7 @@ export default function RegistroOcorrenciaPage() {
                     <div className="nc-summary-fact">
                       <span className="nc-summary-fact-label">Prazo</span>
                       <span className="nc-summary-fact-value">
-                        {dataLimiteStr} <span style={{ color: 'var(--fg-3)', fontSize: 11 }}>· 30 dias</span>
+                        30 dias <span style={{ color: 'var(--fg-3)', fontSize: 11 }}>· a partir do envio p/ tratativa</span>
                       </span>
                     </div>
                   )}
@@ -1157,7 +1153,6 @@ export default function RegistroOcorrenciaPage() {
           localizacaoNome={localizacaoNome}
           severidade={severidade}
           probabilidade={probabilidade}
-          prazoStr={dataLimiteStr}
           dynamicRecipients={dynamicRecipients}
           emailsPadrao={emailsPadrao}
           isPending={mutation.isPending}

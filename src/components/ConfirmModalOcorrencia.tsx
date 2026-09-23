@@ -36,7 +36,6 @@ interface Props {
   localizacaoNome?: string
   severidade: number
   probabilidade: number
-  prazoStr: string
   dynamicRecipients: DynamicRecipient[]
   emailsPadrao: EmailPadrao[]
   isPending: boolean
@@ -49,7 +48,7 @@ interface Props {
 
 export default function ConfirmModalOcorrencia({
   open, onClose, tipo, titulo, estabelecimentoNome, localizacaoNome,
-  severidade, probabilidade, prazoStr, dynamicRecipients, emailsPadrao,
+  severidade, probabilidade, dynamicRecipients, emailsPadrao,
   isPending, isSuccess, isError, createdId, onConfirm, onNavigate,
 }: Props) {
   const [stage, setStage] = useState<'review' | 'sending' | 'success'>('review')
@@ -223,13 +222,13 @@ export default function ConfirmModalOcorrencia({
                     </div>
                   </div>
                 )}
-                {tipo === 'NAO_CONFORMIDADE' && prazoStr && (
+                {tipo === 'NAO_CONFORMIDADE' && (
                   <div className="nc-confirm-row">
                     <span className="nc-confirm-row-icon"><Calendar size={14} /></span>
                     <div className="nc-confirm-row-content">
                       <span className="nc-confirm-row-label">Prazo tratativa</span>
                       <span className="nc-confirm-row-value">
-                        {prazoStr} <span style={{ color: 'var(--fg-3)', fontSize: 11 }}>(30 dias)</span>
+                        30 dias <span style={{ color: 'var(--fg-3)', fontSize: 11 }}>(a partir do envio para tratativa)</span>
                       </span>
                     </div>
                   </div>
@@ -490,7 +489,7 @@ export default function ConfirmModalOcorrencia({
                 <>
                   <div className="nc-success-meta-item">
                     <span className="nc-success-meta-label">Prazo</span>
-                    <span className="nc-success-meta-value">{prazoStr}</span>
+                    <span className="nc-success-meta-value">30 dias após envio para tratativa</span>
                   </div>
                   <div className="nc-success-meta-divider" />
                 </>
